@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<item
+    android:id="@+id/navigation_home"
+    android:icon="@mipmap/ic_launcher"
+    android:title="@string/title_home"
+    />
+    <item android:title="@string/trending_stories"
+        android:icon="@mipmap/ic_launcher"
+        android:id="@+id/title_trendy"/>
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/Search"/>
 </menu>
