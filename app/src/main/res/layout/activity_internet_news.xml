@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             style="?android:attr/progressBarStyleHorizontal"/>
         <WebView
-            android:id="@+id/webview"
+            android:id="@+id/Webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

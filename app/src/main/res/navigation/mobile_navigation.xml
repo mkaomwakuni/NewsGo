@@ -18,5 +18,5 @@
         android:id="@+id/navigation_search"
         android:name="com.mkao.newsgo.ui.search.SearchFragment"
         android:label="@string/title_search"
-        tools:layout="fragment_search"/>
+        tools:layout="@layout/fragment_search"/>
 </navigation>
