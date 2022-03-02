@@ -1,6 +1,12 @@
 package com.mkao.newsgo;
 
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -31,7 +37,15 @@ public class NewsService {
     }
 
     private OkHttpClient createHttpClient() {
-        return null;
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @NonNull
+            @Override
+            public Response intercept(@NonNull Chain chain) throws IOException {
+                final
+
+            }
+        })
     }
 
 
