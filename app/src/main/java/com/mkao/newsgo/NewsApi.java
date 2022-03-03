@@ -10,4 +10,17 @@ public interface NewsApi {
     Call<NewsList> getBasedOnLanguage(@Query("language") String lang,
                                       @Query("country")String country,
                                       @Query("apiKey") String key);
+    @GET("top-headlines")
+    Call<NewsList> getBasedOnCategory(@Query("language") String language,
+                                      @Query("country")String country,
+                                      @Query("category") String category,
+                                      @Query("apiKey") String key);
+    @GET("top-headlines")
+    Call<NewsList> getTrendingArticles(@Query("country") String country,
+                                       @Query("sortBy") String sort,
+                                       @Query("apiKey") String key);
+    @GET("everything")
+    Call<NewsList>getBySearch(@Query("lang") String language,
+                              @Query("q") String search,
+                              @Query("apiKey") String key);
 }
