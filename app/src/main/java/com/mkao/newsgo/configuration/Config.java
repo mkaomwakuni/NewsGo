@@ -39,4 +39,7 @@ public class Config {
         lang = locale.getLanguage();
         return lang;
     }
+    public  static  String getSort(Sort type){
+        return type.toString();
+    }
 }

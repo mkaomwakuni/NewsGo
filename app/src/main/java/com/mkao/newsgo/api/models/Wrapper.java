@@ -12,11 +12,11 @@ public class Wrapper<T> {
         this.data = data;
     }
 
-    public Throwable getmError() {
+    public Throwable getError() {
         return mError;
     }
 
-    public void setmError(Throwable mError) {
+    public void setError(Throwable mError) {
         this.mError = mError;
     }
 }
