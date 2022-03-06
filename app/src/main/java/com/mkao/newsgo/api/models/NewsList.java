@@ -5,7 +5,7 @@ import com.mkao.newsgo.api.models.NewsDTO;
 
 import java.util.List;
 
-/**unified liof news for all fragments*/
+/**unified list news for all fragments*/
 public class NewsList {
     @SerializedName("articles")
     private List<NewsDTO> mNewsDTOList;
