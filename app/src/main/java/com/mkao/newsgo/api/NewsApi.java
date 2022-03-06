@@ -1,6 +1,7 @@
-package com.mkao.newsgo;
+package com.mkao.newsgo.api;
 
-import kotlin.reflect.KCallable;
+import com.mkao.newsgo.api.models.NewsList;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

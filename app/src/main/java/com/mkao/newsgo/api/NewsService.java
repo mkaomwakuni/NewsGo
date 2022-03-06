@@ -1,6 +1,8 @@
-package com.mkao.newsgo;
+package com.mkao.newsgo.api;
 
 import androidx.annotation.NonNull;
+
+import com.mkao.newsgo.api.NewsApi;
 
 import java.io.IOException;
 
