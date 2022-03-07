@@ -1,14 +1,19 @@
 package com.mkao.newsgo.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mkao.newsgo.Internet_news;
+import com.mkao.newsgo.R;
 import com.mkao.newsgo.api.models.NewsDTO;
 import com.mkao.newsgo.databinding.ItemNewsBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +42,78 @@ public class ListNews{
         public NewsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             //Instantiating a  XML file into its corresponding View objects.
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            ItemNewsBinding itemNewsBinding = ItemNewsBinding.inflate(layoutInflater,parent,false);
+            ItemNewsBinding itemBinding = ItemNewsBinding.inflate(layoutInflater,parent,false);
             NewsHolder newsHolder = new NewsHolder(itemBinding,new ClickListener(){
-
-            })
+                @Override
+                public void onClick(int position){
+                    String url = mList.get(position).getUrl();
+                    Intent intent = Internet_news.getIntent(mContext,url);
+                    mContext.startActivity(intent);
+                }
+                @Override
+                public void onShare (int position){
+                    String url = mList.get(position).getUrl();
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT,url);
+                    sendIntent.setType("text/plain");
+                    Intent shareIntent = Intent.createChooser(sendIntent,null);
+                    mContext.startActivity(shareIntent);
+                }
+            });
+            return newsHolder;
 
         }
 
         @Override
         public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
 
+            holder.bind(mList.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mList.size();
         }
 
-        private
+    }
+    public static class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private final ItemNewsBinding binding;
+        ClickListener NclickListener;
+
+
+        public NewsHolder(ItemNewsBinding binding, ClickListener click) {
+            super(binding.getRoot());
+            this.binding = binding;
+            this.NclickListener = click;
+
+            binding.getRoot().setOnClickListener(this);
+            binding.share.setOnClickListener(this);
+        }
+
+        public void bind(NewsDTO news){
+            binding.heading.setText(news.getTitle());
+            binding.text.setText(news.getContent());
+            binding.publisher.setText(news.getAuthor());
+            Picasso.get().load(news.getUrlToImage()).fit().centerCrop()
+                    .placeholder(R.drawable.news_placeholder)
+                    .into(binding.image);
+            binding.executePendingBindings();
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId()==binding.getRoot().getId()){
+                NclickListener.onClick(this.getLayoutPosition());
+            }
+            if (view.getId()==binding.share.getId()){
+                NclickListener.onShare(this.getLayoutPosition());
+            }
+        }
+    }
+    /**Webview and Sharesheet on Click*/
+    public interface ClickListener{
+        void onClick(int position);
+        void onShare(int position);
     }
 }
