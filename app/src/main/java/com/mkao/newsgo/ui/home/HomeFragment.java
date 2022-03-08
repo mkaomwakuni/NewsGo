@@ -19,144 +19,170 @@ import com.mkao.newsgo.databinding.FragmentHomeBinding;
 import com.mkao.newsgo.databinding.ItemCategoryBinding;
 import com.mkao.newsgo.ui.ListNews;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.List;
 
 
 public class HomeFragment extends Fragment {
-    private HomeViewModel NhomeViewModel;
-    private FragmentHomeBinding Nbinding;
-    private SwipeRefreshLayout Nswipe;
+    private HomeViewModel mViewModel;
+    private FragmentHomeBinding mBinding;
+    private SwipeRefreshLayout mSwipe;
 
+    RecyclerView mNewsList;
+    ListNews.Adapter mNewsAdapter;
 
-    RecyclerView NNewsList;
-    ListNews.Adapter NNewsAdapter;
-
-    RecyclerView NcategoryList;
-    Adapter Ncategory;
+    RecyclerView mCategoryList;
+    Adapter mCategoryAdapter;
 
     private String category;
 
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        mViewModel =
+                new ViewModelProvider(this).get(HomeViewModel.class);
 
+        mBinding = FragmentHomeBinding.inflate(inflater, container, false);
+        mSwipe = mBinding.swipeContainer;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        NhomeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
-        Nbinding = FragmentHomeBinding.inflate(inflater,container,false);
-        Nswipe= Nbinding.swipeContainer;
-
-        return Nbinding.getRoot();
+        return mBinding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NNewsList= Nbinding.homeList;
-        NcategoryList= Nbinding.categoryList;
-        NcategoryList.setNestedScrollingEnabled(false);
+        mNewsList = mBinding.homeList;
+        mCategoryList = mBinding.categoryList;
+        mCategoryList.setNestedScrollingEnabled(false);
+
 
         List<String> categories = Arrays.asList(getResources().getStringArray(R.array.categories));
-
-        Ncategory = new Adapter(data ->{
+        mCategoryAdapter = new Adapter(data -> {
             category = data;
             refresh();
-            NNewsAdapter.notifyDataSetChanged();
+            mNewsAdapter.notifyDataSetChanged();
         },categories);
-        Nswipe.setOnRefreshListener(this::refresh);
-        Nswipe.setColorSchemeColors(Nbinding.getRoot().getResources().getColor(R.color.purple_700),
-                Nbinding.getRoot().getResources().getColor(R.color.purple_200));
+
+
+        mSwipe.setOnRefreshListener(this::refresh);
+        mSwipe.setColorSchemeColors(mBinding.getRoot().getResources().getColor(R.color.purple_700),
+                mBinding.getRoot().getResources().getColor(R.color.purple_200));
 
         setRecyclerView();
         refresh();
     }
 
-    private void setRecyclerView() {
-        if (NNewsAdapter==null){
-            NNewsAdapter= new ListNews.Adapter(getContext());
-            NNewsList.setAdapter(NNewsAdapter);
-            NNewsList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mNewsList.setAdapter(null);
+        mNewsAdapter = null;
+        mNewsList = null;
+        mBinding = null;
     }
 
+    private void setRecyclerView() {
+        if (mNewsAdapter == null) {
+            mNewsAdapter = new ListNews.Adapter(getContext());
+            mNewsList.setAdapter(mNewsAdapter);
+            mNewsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        } else mNewsAdapter.notifyDataSetChanged();
+
+        mCategoryList.setAdapter(mCategoryAdapter);
+        mCategoryList.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL,false));
+    }
 
     private void refresh() {
-        if (category==null){
-            NhomeViewModel.getList().observe(this,listWrapper ->{
-                if (listWrapper.getError()!=null){
-                    Toast.makeText(getContext(),R.string.error_web, Toast.LENGTH_SHORT).show();
+        if (category == null) {
+            mViewModel.getList().observe(this, listWrapper -> {
+                if (listWrapper.getError() != null) {
+                    Toast.makeText(getContext(), R.string.error_web,Toast.LENGTH_SHORT).show();
                 }else {
-                    NNewsAdapter.setList(listWrapper.getData());
+                    mNewsAdapter.setList(listWrapper.getData());
                 }
-                Nswipe.setRefreshing(false);
+                mSwipe.setRefreshing(false);
+            });
+        } else {
+            mViewModel.getList(category).observe(this, listWrapper -> {
+                if (listWrapper.getError() != null) {
+                    Toast.makeText(getContext(), R.string.error_web, Toast.LENGTH_SHORT).show();
+                }else {
+                    mNewsAdapter.setList(listWrapper.getData());
+                }
+                mSwipe.setRefreshing(false);
             });
         }
-
     }
-    /**ADAPTER FOR LIST THAT SHOWS CATEGORIES*/
-    public static class Adapter extends RecyclerView.Adapter<CategoryHolder>{
-        private static final List<String> LIST = (Arrays.asList("business","entertainment"
-                ,"general","health","science","sport","technology"));
-        private final List<String>listtoshow;
+    /**Adapter for list that shows categories*/
+    public static class Adapter extends RecyclerView.Adapter<CategoryHolder> {
+        private static final List<String> LIST = (Arrays.asList("business", "entertainment",
+                "general", "health", "science", "sport", "technology"));
+        private final List<String> listToShow;
         private String category;
-        private final CategoryHolder.DataTransfer dataTransfer;
+        private final DataTransfer mDataTransfer;
 
-        public Adapter(List<String> listtoshow, CategoryHolder.DataTransfer dataTransfer) {
-            this.listtoshow = listtoshow;
-            this.dataTransfer = dataTransfer;
+        public Adapter(DataTransfer dataTransfer, List<String> showVal) {
+            mDataTransfer = dataTransfer;
+            listToShow = showVal;
         }
 
         @NonNull
+        @NotNull
         @Override
-        public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            @NonNull ItemCategoryBinding binding = ItemCategoryBinding.inflate(layoutInflater,parent,false);
-            CategoryHolder holder = new CategoryHolder(binding,position ->{
+        public CategoryHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater =
+                    LayoutInflater.from(parent.getContext());
+            ItemCategoryBinding binding =
+                    ItemCategoryBinding.inflate(layoutInflater, parent, false);
+            CategoryHolder holder = new CategoryHolder(binding, position -> {
                 category = LIST.get(position);
-                dataTransfer.transferData(category);
+                mDataTransfer.transferData(category);
             });
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-            holder.bind(listtoshow.get(position));
+        public void onBindViewHolder(@NonNull @NotNull CategoryHolder holder, int position) {
+            holder.bind(listToShow.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return listtoshow.size();
+            return listToShow.size();
         }
-    }
-    public static class CategoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-      CategoryClick Nclick;
-      ItemCategoryBinding Nbinding;
-      public CategoryHolder(ItemCategoryBinding binding,CategoryClick click){
-          super(binding.getRoot());
-          Nbinding= binding;
-          Nclick=click;
 
-          Nbinding.getRoot().setOnClickListener(this);
-      }
+
+    }
+    public static class CategoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        CategoryClick mClick;
+        ItemCategoryBinding mBinding;
+
+        public CategoryHolder(ItemCategoryBinding binding, CategoryClick click) {
+            super(binding.getRoot());
+            mBinding = binding;
+            mClick = click;
+
+            mBinding.getRoot().setOnClickListener(this);
+        }
 
         public void bind(String category) {
-          Nbinding.setCategory(category);
-          Nbinding.executePendingBindings();
+            mBinding.setCategory(category);
+            mBinding.executePendingBindings();
         }
 
         @Override
-        public void onClick(View view) {
-            Nclick.onClick(this.getLayoutPosition());
-        }
-        /*Get chosen category onclick*/
-        public interface CategoryClick{
-            void onClick(int position);
-        }
-        /*Transfer chosen category from Adapter to Fragment*/
-        public interface DataTransfer{
-            void transferData(String data);
+        public void onClick(View v) {
+            mClick.onClick(this.getLayoutPosition());
         }
     }
-
+    /**Get chosen category on click*/
+    public interface CategoryClick {
+        void onClick(int position);
+    }
+    /**Transfer chosen category from Adapter to Fragment*/
+    public interface DataTransfer {
+        void transferData(String data);
+    }
 }
