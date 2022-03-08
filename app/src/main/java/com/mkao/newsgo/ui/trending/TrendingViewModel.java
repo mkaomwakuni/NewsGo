@@ -1,36 +1,28 @@
 package com.mkao.newsgo.ui.trending;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.mkao.newsgo.api.NewsRepository;
+import com.mkao.newsgo.api.models.NewsDTO;
+import com.mkao.newsgo.api.models.Wrapper;
+import com.mkao.newsgo.configuration.Config;
+import com.mkao.newsgo.configuration.Sort;
 
-import com.mkao.newsgo.databinding.FragmentTrendingBinding;
-import com.mkao.newsgo.ui.ListNews;
+import java.util.List;
 
-public class TrendingViewModel extends Fragment {
-    private TrendingViewModel trendingViewModel;
-    private FragmentTrendingBinding mbind;
+public class TrendingViewModel extends ViewModel {
+    private MutableLiveData<Wrapper<List<NewsDTO>>>mList;
+    private String country;
+    private String sortBy;
 
-    private RecyclerView recyclerView;
-    private ListNews.Adapter mAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        trendingViewModel = new ViewModelProvider(TrendingViewModel.class);
+    public TrendingViewModel() {
+        mList = new MutableLiveData<>();
+        country = Config.geCountry();
+        sortBy = Config.getSort(Sort.POPULARITY);
+    }
 
-        mbind = FragmentTrendingBinding.inflate(inflater,container,false);
-        recyclerView= mbind.trendingList;
-        swipeRefreshLayout= mbind.getRoot();
-
-        return mbind.getRoot();
+    public MutableLiveData<Wrapper<List<NewsDTO>>> getList() {
+        return NewsRepository.getInstance().getListBasedOnCountry(country,sortBy);
     }
 }

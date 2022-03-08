@@ -29,10 +29,10 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
 
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         binding= FragmentSearchBinding.inflate(inflater,container,false);
+
 
         recyclerView=binding.SearchList;
         mSearchView=binding.searchview;
@@ -77,7 +77,7 @@ public class SearchFragment extends Fragment {
     }
     private void fetchData(String q) {
         searchViewModel.setQuery(q);
-        searchViewModel.getList().observe(this,listWrapper ->{
+        searchViewModel.getList(SearchViewModel.class).observe(this, listWrapper ->{
             if (listWrapper.getError()!=null){
                 Toast.makeText(getContext(), R.string.error_web,Toast.LENGTH_SHORT).show();
             }else {

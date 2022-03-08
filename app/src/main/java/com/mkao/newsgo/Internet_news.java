@@ -15,10 +15,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.mkao.newsgo.databinding.ActivityInternetNewsBinding;
 import com.mkao.newsgo.databinding.ActivityMainBinding;
 
 public class Internet_news extends AppCompatActivity {
-private ActivityMainBinding binding;
+private ActivityInternetNewsBinding binding;
 private WebView NwebView;
 private String  url;
 private static final String EXTRA_URL="com.mkao.newsgo.Internet_news.EXTRA_URL";
@@ -32,10 +33,10 @@ public static Intent getIntent(Context context, String url){
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityInternetNewsBinding.inflate(getLayoutInflater());
         url = getIntent().getStringExtra(EXTRA_URL);
         setContentView(binding.getRoot());
-        NwebView= binding.web;
+        NwebView= binding.Webview;
 
         NwebView.loadUrl(url);
         binding.progressBar.setMax(100); binding.progressBar.setProgress(1);

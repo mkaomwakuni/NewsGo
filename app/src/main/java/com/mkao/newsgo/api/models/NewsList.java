@@ -13,7 +13,7 @@ public class NewsList {
     public List<NewsDTO> getmNewsDTOList(){
         return mNewsDTOList;
     }
-    public void setmNewsDTOList(List<NewsDTO> newsDTOList){
+    public void setNewsDTOList(List<NewsDTO> newsDTOList){
         mNewsDTOList= newsDTOList;
     }
 

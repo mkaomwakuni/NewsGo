@@ -18,7 +18,7 @@ public class SearchViewModel extends ViewModel {
     public SearchViewModel(){
         language = Config.getLang();
     }
-    public MutableLiveData<Wrapper<List<NewsDTO>>> getList(){
+    public MutableLiveData<Wrapper<List<NewsDTO>>> getList(Class<SearchViewModel> searchViewModelClass){
         return NewsRepository.getInstance().getListBasedOnQuery(language,q);
 
     }
