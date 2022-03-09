@@ -2,14 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <item
     android:id="@+id/navigation_home"
-    android:icon="@mipmap/ic_launcher"
-    android:title="@string/title_home"
-    />
-    <item android:title="@string/trending_stories"
-        android:icon="@mipmap/ic_launcher"
+    android:icon="@drawable/ic_home_black_24dp"
+    android:title="@string/title_home"/>
+
+    <item
+        android:title="@string/Trending"
+        android:icon="@drawable/ic_dashboard_black_24dp"
         android:id="@+id/title_trendy"/>
     <item
         android:id="@+id/navigation_search"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/Search"/>
 </menu>

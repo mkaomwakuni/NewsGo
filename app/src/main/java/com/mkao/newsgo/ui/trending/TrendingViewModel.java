@@ -12,6 +12,7 @@ import com.mkao.newsgo.configuration.Sort;
 import java.util.List;
 
 public class TrendingViewModel extends ViewModel {
+
     private MutableLiveData<Wrapper<List<NewsDTO>>>mList;
     private String country;
     private String sortBy;

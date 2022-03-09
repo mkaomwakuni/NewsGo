@@ -46,8 +46,6 @@ public class TrendingFragment extends Fragment {
 
     }
 
-
-
     private void refresh() {
         trendingViewModel.getList().observe(this,listWrapper ->{
             if (listWrapper.getError()!=null){

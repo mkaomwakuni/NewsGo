@@ -8,11 +8,11 @@ public class SourceList {
     @SerializedName("source")
     private List<SourceDTO> mSourceDTOList;
 
-    public List<SourceDTO> getmSourceDTOList() {
+    public List<SourceDTO> getSourceDTOList() {
         return mSourceDTOList;
     }
 
-    public void setmSourceDTOList(List<SourceDTO> mSourceDTOList) {
+    public void setSourceDTOList(List<SourceDTO> mSourceDTOList) {
         this.mSourceDTOList = mSourceDTOList;
     }
 }

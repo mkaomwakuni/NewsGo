@@ -117,9 +117,9 @@ public class HomeFragment extends Fragment {
     }
     /**Adapter for list that shows categories*/
     public static class Adapter extends RecyclerView.Adapter<CategoryHolder> {
-        private static final List<String> LIST = (Arrays.asList("business", "entertainment",
+        private static final List<String>LIST = (Arrays.asList("business", "entertainment",
                 "general", "health", "science", "sport", "technology"));
-        private final List<String> listToShow;
+        private final List<String>listToShow;
         private String category;
         private final DataTransfer mDataTransfer;
 
